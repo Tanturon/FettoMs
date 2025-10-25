@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FettoMs</title>
+
+  <!-- Moderniserad stil: behåller paletten men gör den luftigare,
+       med glas-kort, större typografi, micro-animationer och sticky-blur-nav. -->
+  <style>
+    :root{
+      /* Samma färger som tidigare */
+      --bg: #fff6e6;
+      --teal: #5aa6a4;
+      --rust: #c35a32;
+      --ink: #1f1b18;
+      --accent: #ffd27e;
+
+      /* Nytt: neutrala nyanser & skuggor */
+      --ink-10: rgba(31,27,24,.10);
+      --ink-15: rgba(31,27,24,.15);
+      --ink-30: rgba(31,27,24,.30);
+      --glass: rgba(255,255,255,.65);
+      --radius-lg: 24px;
+      --radius-xl: 36px;
+
+      /* Typografi (systemstack för prestanda) */
+      --font: ui-rounded, "SF Pro Rounded", "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+
+      /* Flytande skala */
+      --fs-hero: clamp(2rem, 4vw, 3.2rem);
+      --fs-h3: clamp(1.6rem, 2.4vw, 2.1rem);
+      --fs-body: clamp(1rem, 1.2vw, 1.08rem);
+      --space: clamp(18px, 2.4vw, 28px);
+    }
+
+    /* Bas */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: var(--font);
+      color: var(--ink);
+      background: var(--bg);
+      line-height:1.65;
+      font-size: var(--fs-body);
+      /* Subtil bakgrundsgradient + “blobs” för modern känsla */
+      background-image:
+        radial-gradient(70% 50% at 90% 10%, #ffffff 0%, transparent 60%),
+        radial-gradient(60% 40% at 10% 0%, #fff 0%, transparent 60%),
+        radial-gradient(50% 50% at 80% 80%, rgba(90,166,164,.10) 0%, transparent 55%),
+        radial-gradient(40% 40% at 20% 90%, rgba(195,90,50,.10) 0%, transparent 55%),
+        linear-gradient(180deg, #fffdf8 0%, #fff6e6 100%);
+      background-attachment: fixed;
+    }
+
+    .wrap{max-width:1160px; margin:auto; padding:0 24px}
+    .row{display:flex; align-items:center; gap:16px}
+
+    /* Header: glassy sticky nav med blur */
+    header{
+      position:sticky; top:0; z-index:100;
+      backdrop-filter: saturate(140%) blur(10px);
+      background: color-mix(in srgb, var(--glass) 80%, #fff 20%);
+      border-bottom: 1px solid var(--ink-10);
+    }
+    .brand{display:flex; align-items:center; gap:10px; padding:12px 0}
+    .brand img{height:40px; width:auto; display:block}
+    .brand h1{
+      font-size:1.4rem; margin:0; letter-spacing:.4px; font-weight:900; color:var(--ink);
+    }
+    nav{margin-left:auto}
+    .nav-list{display:flex; gap:8px; list-style:none; padding:0; margin:0}
+    .nav-list a{
+      --pad: 10px;
+      display:inline-block; padding:8px var(--pad);
+      border-radius:999px; text-decoration:none; color:var(--ink);
+      transition:transform .15s ease, background .2s ease, box-shadow .2s ease;
+    }
+    .nav-list a:hover{background:rgba(31,27,24,.06)}
+    .nav-list a.active{
+      background: color-mix(in srgb, var(--teal) 20%, #fff 80%);
+      box-shadow: inset 0 0 0 2px var(--teal);
+    }
+    .menu-btn{
+      display:none; margin-left:auto; border:0; background:#fff; color:var(--ink);
+      padding:10px 14px; border-radius:14px; font-weight:800;
+      box-shadow: 0 8px 20px -10px var(--ink-30), 0 0 0 1px var(--ink-10) inset;
+    }
+    @media (max-width: 860px){
+      nav{display:none}
+      nav.open{display:block}
+      .nav-list{flex-direction:column; padding:12px 0}
+      .menu-btn{display:inline-block}
+    }
+
+    /* Hero: ren, stor typografi + modern knappar */
+    .hero{padding: clamp(36px, 5vw, 64px) 0}
+    .hero .inner{
+      display:grid; grid-template-columns: 1.1fr .9fr; gap: clamp(22px, 3vw, 40px);
+      align-items:center;
+    }
+    .hero h2{
+      font-size: var(--fs-hero); margin:.2rem 0 .6rem;
+      line-height:1.1; letter-spacing:.2px;
+    }
+    .lead{max-width:62ch; opacity:.9}
+    .cta{
+      --bg: var(--rust);
+      display:inline-flex; align-items:center; gap:10px;
+      margin-top:14px; padding:12px 18px; border-radius:16px;
+      color:#fff; background: var(--bg); text-decoration:none; font-weight:900;
+      box-shadow: 0 10px 20px -10px var(--ink-30);
+      transition: transform .15s ease, box-shadow .2s ease, background .2s ease;
+    }
+    .cta:hover{transform: translateY(-1px); box-shadow: 0 14px 28px -12px var(--ink-30)}
+    .cta.secondary{--bg: var(--teal)}
+
+    /* Badge: tunnare kant, mjuk skugga */
+    .badge{
+      display:block; max-width:420px; width:100%;
+      border-radius:50%;
+      box-shadow: 0 20px 50px -20px var(--ink-30), 0 0 0 1px var(--ink-10) inset;
+      background:#fff;
+    }
+    @media (max-width: 860px){ .hero .inner{grid-template-columns:1fr} .badge{margin:auto} }
+
+    /* Sektioner */
+    section{scroll-margin-top:86px}
+    .sec{padding: clamp(48px, 6vw, 76px) 0}
+    .sec h3{font-size: var(--fs-h3); margin:0 0 10px}
+    .muted{opacity:.85}
+
+    /* Glas-kort */
+    .card{
+      background: var(--glass);
+      border: 1px solid var(--ink-10);
+      border-radius: var(--radius-xl);
+      padding: clamp(18px, 2.5vw, 28px);
+      box-shadow: 0 20px 40px -22px var(--ink-30);
+      backdrop-filter: blur(6px);
+    }
+
+    /* “Feature chips” i träning */
+    .chips{display:flex; gap:12px; flex-wrap:wrap; margin-top:12px}
+    .chip{
+      padding:10px 12px; border-radius:999px; font-weight:700;
+      background: color-mix(in srgb, var(--teal) 18%, #fff 82%);
+      box-shadow: 0 0 0 1px var(--ink-10) inset;
+    }
+
+    /* Galleri: modern, luftig grid med auto-fit */
+    .gallery{
+      display:grid; gap:14px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+    .gallery figure{
+      background:#fff; border-radius:20px; padding:10px; margin:0;
+      box-shadow: 0 14px 30px -18px var(--ink-30), 0 0 0 1px var(--ink-10) inset;
+      transition: transform .15s ease;
+    }
+    .gallery figure:hover{transform: translateY(-2px)}
+    .gallery img{width:100%; height:220px; object-fit:cover; border-radius:14px; display:block}
+    .gallery figcaption{font-size:.95rem; margin-top:8px; font-weight:800; opacity:.9}
+
+    /* Lightbox: full-bleed och ren */
+    .lightbox{
+      position:fixed; inset:0; background:rgba(0,0,0,.86);
+      display:none; align-items:center; justify-content:center; padding:24px; z-index:1000;
+    }
+    .lightbox.open{display:flex}
+    .lightbox img{max-width:min(100%,1200px); max-height:86vh; border-radius:16px; box-shadow:0 10px 40px rgba(0,0,0,.45)}
+    .lightbox-close{
+      position:absolute; top:18px; right:18px; border:0; background:#fff; color:var(--ink);
+      border-radius:12px; padding:10px 14px; font-weight:900;
+      box-shadow: 0 8px 20px -12px var(--ink-30);
+      cursor:pointer;
+    }
+
+    /* Footer */
+    footer{
+      padding:44px 0 72px; text-align:center;
+      border-top: 1px solid var(--ink-10);
+      background: linear-gradient(#fffdf9, #fff8ec);
+    }
+    .social{display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin:12px 0 0}
+    .social a{
+      display:inline-flex; align-items:center; gap:8px; text-decoration:none; color:#fff;
+      background: var(--teal); padding:12px 14px; border-radius:14px; font-weight:900;
+      box-shadow: 0 12px 22px -14px var(--ink-30);
+      transition: transform .15s ease, box-shadow .2s ease;
+    }
+    .social a:hover{transform: translateY(-1px); box-shadow: 0 16px 28px -16px var(--ink-30)}
+    .wordmark{height:42px; width:auto; display:block; margin:0 auto 10px}
+    small{opacity:.75}
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <div class="wrap row">
+      <a class="brand" href="#top" aria-label="FettoMs startsida">
+        <!-- Byt src till din textlogga: /images/wordmark.png -->
+        <img src="images/wordmark.png" alt="FettoMs ordmärke" />
+        <h1>FettoMs</h1>
+      </a>
+      <button class="menu-btn" aria-expanded="false" aria-controls="mainnav">Meny</button>
+      <nav id="mainnav" aria-label="Huvudnavigation">
+        <ul class="nav-list">
+          <li><a href="#om-oss">Om oss</a></li>
+          <li><a href="#satsningen">Satsningen</a></li>
+          <li><a href="#traning">Så här tränar vi</a></li>
+          <li><a href="#galleri">Galleri</a></li>
+          <li><a href="#folj-oss">Följ oss</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section id="top" class="hero">
+    <div class="wrap inner">
+      <div>
+        <h2>Två tanter. Tre grenar. <br/> Modern humor, retro själ.</h2>
+        <p class="lead muted">Vi är FettoMs – två rulltiga hjältinnor på väg mot VM i triathlon (mest på skoj, men med lite jävlar anamma). Följ vår satsning, vår träning och våra skratt på vägen.</p>
+        <a class="cta" href="#satsningen">
+          <!-- pil -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M13 5l7 7-7 7M20 12H4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Läs om satsningen
+        </a>
+        <a class="cta secondary" href="#galleri" style="margin-left:8px">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v14a1 1 0 0 1-1.6.8l-3.7-2.9a2 2 0 0 0-2.4 0l-1.2.9a2 2 0 0 1-2.4 0L6 15l-1.6 1.2A1 1 0 0 1 3 15.4V5Z" stroke="currentColor" stroke-width="2"/></svg>
+          Se galleri
+        </a>
+      </div>
+      <div>
+        <!-- Byt src till din badge: /images/badge.png -->
+        <img class="badge" src="images/badge.png" alt="FettoMs badge: sim & cykel" loading="lazy" />
+      </div>
+    </div>
+  </section>
+
+  <!-- OM OSS -->
+  <section id="om-oss" class="sec">
+    <div class="wrap">
+      <div class="card">
+        <h3>Om oss</h3>
+        <p>Vi heter M &amp; M – två kompisar som gillar utmaningar och ännu mer gillar att göra dem med glimten i ögat. Med badmössa, cykelhjälm och överdrivet gott humör dokumenterar vi vår resa.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SATSNINGEN -->
+  <section id="satsningen" class="sec">
+    <div class="wrap">
+      <div class="card">
+        <h3>Satsningen mot VM</h3>
+        <p>Målet? Tävla tillsammans nästa år och ha vansinnigt kul på vägen. Vi delar plan, delmål och lärdomar – inklusive alla små (och stora) tabbar.</p>
+        <ul>
+          <li><strong>Plan:</strong> Basträning nu, block mot sim/cykel/löpning, sedan tävlingar.</li>
+          <li><strong>Delmål:</strong> Första tävlingen på hemmaplan, därefter längre distanser.</li>
+          <li><strong>Vibe:</strong> Resultat i all ära – men humorn vinner alltid.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRÄNING -->
+  <section id="traning" class="sec">
+    <div class="wrap">
+      <div class="card">
+        <h3>Så här tränar vi</h3>
+        <p>Vi mixar passen mellan sim, cykel, styrka och skonsam löpning. Vi lyssnar på kroppar som gillar rörelse i lagom dos – och vi firar varje liten seger.</p>
+
+        <!-- Snabba “chips” för fokusområden -->
+        <div class="chips">
+          <span class="chip">Sim – teknik & andning</span>
+          <span class="chip">Cykel – prattempo + backar</span>
+          <span class="chip">Styrka – knä-vänligt</span>
+          <span class="chip">Rörlighet – lite & ofta</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERI -->
+  <section id="galleri" class="sec">
+    <div class="wrap">
+      <div class="card">
+        <h3>Galleri</h3>
+        <p class="muted"><em>Tips:</em> Lägg foton i <code>/images/gallery/</code> och byt exemplen. Klicka för förstoring.</p>
+
+        <!-- Byt ut till egna bilder -->
+        <div class="gallery" id="gallery">
+          <figure>
+            <img src="images/gallery/example-1.jpg" alt="Första simpasset" loading="lazy" />
+            <figcaption>Första simpasset</figcaption>
+          </figure>
+          <figure>
+            <img src="images/gallery/example-2.jpg" alt="Cykelrunda i kvällssol" loading="lazy" />
+            <figcaption>Cykelrunda i kvällssol</figcaption>
+          </figure>
+          <figure>
+            <img src="images/gallery/example-3.jpg" alt="Styrka i parken" loading="lazy" />
+            <figcaption>Styrka i parken</figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FÖLJ OSS -->
+  <section id="folj-oss" class="sec">
+    <div class="wrap">
+      <div class="card" style="text-align:center">
+        <img class="wordmark" src="images/wordmark.png" alt="FettoMs" loading="lazy" />
+        <h3>Följ oss</h3>
+        <p class="muted">Häng med på resan – fler skratt än intervaller (kanske).</p>
+        <div class="social">
+          <!-- Byt # till riktiga länkar -->
+          <a href="#" aria-label="FettoMs på Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7Zm5 3.5A5.5 5.5 0 1 1 6.5 13 5.5 5.5 0 0 1 12 7.5Zm0 2A3.5 3.5 0 1 0 15.5 13 3.5 3.5 0 0 0 12 9.5Zm5.75-2.75a1 1 0 1 1-1 1 1 1 0 0 1 1-1Z" fill="currentColor"/></svg>
+            Instagram
+          </a>
+          <a href="#" aria-label="FettoMs på TikTok">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14.5 3h2a6.5 6.5 0 0 0 5 5v2a8.5 8.5 0 0 1-5-1.7V15a6 6 0 1 1-6-6h1.5v2A3.5 3.5 0 1 0 13.5 15V3Z" fill="currentColor"/></svg>
+            TikTok
+          </a>
+          <a href="#" aria-label="FettoMs på YouTube">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M22 8.2c0-1.2-.9-2.2-2.1-2.3C17.6 5.6 15 5.5 12 5.5s-5.6.1-7.9.4C2.9 6 2 7 2 8.2 1.7 9.9 1.6 11.6 1.6 13.3s.1 3.4.4 5.1c0 1.2.9 2.2 2.1 2.3 2.3.3 4.9.4 7.9.4s5.6-.1 7.9-.4c1.2-.1 2.1-1.1 2.1-2.3.3-1.7.4-3.4.4-5.1s-.1-3.4-.4-5.1ZM10 16.5v-6l5.5 3-5.5 3Z" fill="currentColor"/></svg>
+            YouTube
+          </a>
+          <a href="mailto:hello@fettoms.example" aria-label="Maila FettoMs">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2 6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v.3l-10 5.6L2 6.3V6Zm0 2.9V18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8.9l-9.3 5.2a2 2 0 0 1-1.9 0L2 8.9Z" fill="currentColor"/></svg>
+            E-post
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <small>© <span id="year"></span> FettoMs. Allt med glimten i ögat.</small>
+    </div>
+  </footer>
+
+  <!-- Lightbox + meny + scrollspy -->
+  <div class="lightbox" id="lightbox" aria-hidden="true" aria-label="Bildvisare (stäng med Escape)">
+    <button class="lightbox-close" id="lbClose" aria-label="Stäng">Stäng</button>
+    <img id="lbImg" alt="">
+  </div>
+
+  <script>
+    // År i footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Mobilmeny
+    const menuBtn = document.querySelector('.menu-btn');
+    const nav = document.getElementById('mainnav');
+    menuBtn.addEventListener('click', () => {
+      const open = nav.classList.toggle('open');
+      menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+
+    // Mjuk scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', e=>{
+        const id = a.getAttribute('href').slice(1);
+        const el = document.getElementById(id);
+        if(el){
+          e.preventDefault();
+          el.scrollIntoView({behavior:'smooth', block:'start'});
+          nav.classList.remove('open');
+          menuBtn.setAttribute('aria-expanded','false');
+        }
+      });
+    });
+
+    // Scrollspy
+    const sections = [...document.querySelectorAll('section[id]')];
+    const links = [...document.querySelectorAll('.nav-list a')];
+    const spy = () => {
+      let idx = sections.findIndex(s => s.getBoundingClientRect().top - 110 > 0) - 1;
+      if(idx < 0) idx = sections.length - 1;
+      links.forEach(l=>l.classList.remove('active'));
+      const current = sections[idx]?.id;
+      const active = document.querySelector(`.nav-list a[href="#${current}"]`);
+      if(active) active.classList.add('active');
+    };
+    document.addEventListener('scroll', spy, {passive:true});
+    spy();
+
+    // Lightbox
+    const lb = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lbImg');
+    const lbClose = document.getElementById('lbClose');
+    document.getElementById('gallery').addEventListener('click', e=>{
+      const img = e.target.closest('img');
+      if(!img) return;
+      lbImg.src = img.src;
+      lbImg.alt = img.alt || '';
+      lb.classList.add('open');
+      lb.setAttribute('aria-hidden','false');
+    });
+    const closeLb = () => {
+      lb.classList.remove('open');
+      lb.setAttribute('aria-hidden','true');
+      lbImg.src = '';
+    };
+    lb.addEventListener('click', (e)=>{ if(e.target === lb) closeLb(); });
+    lbClose.addEventListener('click', closeLb);
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeLb(); });
+  </script>
+</body>
+</html>
