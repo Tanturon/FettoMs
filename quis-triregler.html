@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utökat Quiz: Triathlonregler 2025 (Sprint & Standard)</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: #f0f2f5;
+            color: #333;
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .quiz-header {
+            text-align: center;
+            background: #0056b3;
+            color: white;
+            padding: 20px;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 0;
+        }
+        .quiz-container {
+            background: white;
+            padding: 30px;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .question {
+            margin-bottom: 25px;
+            border-bottom: 2px solid #f0f2f5;
+            padding-bottom: 20px;
+        }
+        .question p {
+            font-weight: 600;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+        .options li {
+            background: #f8f9fa;
+            margin-bottom: 8px;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #dee2e6;
+        }
+        .answer-box {
+            display: none;
+            background-color: #e7f3ff;
+            border-left: 5px solid #0056b3;
+            padding: 15px;
+            margin-top: 15px;
+            font-size: 0.95em;
+        }
+        .ref-tag {
+            display: inline-block;
+            background: #28a745;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            margin-bottom: 5px;
+        }
+        button {
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #004494;
+        }
+        .dist-info {
+            font-style: italic;
+            color: #666;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-header">
+    <h1>Tävlingsregler 2025: Sprint & Standard</h1>
+</div>
+
+<div class="quiz-container">
+    <p class="dist-info">Baserat på Svenska Triathlonförbundets reglemente för Sprint (upp till 750m/20km/5km) och Standarddistans (1500m/40km/10km).</p>
+
+    <!-- Fråga 1 -->
+    <div class="question">
+        <p>1. Vilken är den tillåtna tiden för att genomföra en omkörning genom en annan tävlandes draftzone?</p>
+        <ul class="options">
+            <li>A) 15 sekunder</li>
+            <li>B) 20 sekunder</li>
+            <li>C) 25 sekunder</li>
+        </ul>
+        <button onclick="toggleAnswer('q1')">Visa svar & paragraf</button>
+        <div id="q1" class="answer-box">
+            <span class="ref-tag">Paragraf C.3.7.4</span><br>
+            <strong>Rätt svar: B (20 sekunder).</strong> Omkörningen måste ske på maximum 20 sekunder för dessa distanser.
+        </div>
+    </div>
+
+    <!-- Fråga 2 -->
+    <div class="question">
+        <p>2. Hur långt bakom ett övrigt motorfordon (ej motorcykel) måste man ligga för att undvika drafting?</p>
+        <ul class="options">
+            <li>A) 15 meter</li>
+            <li>B) 25 meter</li>
+            <li>C) 35 meter</li>
+        </ul>
+        <button onclick="toggleAnswer('q2')">Visa svar & paragraf</button>
+        <div id="q2" class="answer-box">
+            <span class="ref-tag">Paragraf C.3.7.9</span><br>
+            <strong>Rätt svar: C (35 meter).</strong> Draftzonen för övriga motorfordon är 35 meter, medan den för motorcyklar är 15 meter.
+        </div>
+    </div>
+
+    <!-- Fråga 3 -->
+    <div class="question">
+        <p>3. Vad är tidsstraffet för linjeöverträdelse (mount/dismount) vid växling på Sprintdistans?</p>
+        <ul class="options">
+            <li>A) 10 sekunder</li>
+            <li>B) 15 sekunder</li>
+            <li>C) 30 sekunder</li>
+        </ul>
+        <button onclick="toggleAnswer('q3')">Visa svar & paragraf</button>
+        <div id="q3" class="answer-box">
+            <span class="ref-tag">Paragraf C.3.7.10</span><br>
+            <strong>Rätt svar: A (10 sekunder).</strong> Strafftiden för linjeöverträdelse vid växling är 10 sekunder för sprint och 15 sekunder för standarddistans.
+        </div>
+    </div>
+
+    <!-- Fråga 4 -->
+    <div class="question">
+        <p>4. Inom vilket avstånd från sin märkta plats i växlingsområdet måste cykel och utrustning placeras?</p>
+        <ul class="options">
+            <li>A) 0,3 meter</li>
+            <li>B) 0,5 meter</li>
+            <li>C) 1,0 meter</li>
+        </ul>
+        <button onclick="toggleAnswer('q4')">Visa svar & paragraf</button>
+        <div id="q4" class="answer-box">
+            <span class="ref-tag">Paragraf C.1.5.1</span><br>
+            <strong>Rätt svar: B (0,5 meter).</strong> Utrustning som placeras mer än 0,5 m från nummer/namnskylt medför varning och därefter diskvalificering.
+        </div>
+    </div>
+
+    <!-- Fråga 5 -->
+    <div class="question">
+        <p>5. Vilket straff tillämpas vid nedskräpning (t.ex. barpapper eller gel) under löpmomentet på en standarddistans?</p>
+        <ul class="options">
+            <li>A) 15 sekunder</li>
+            <li>B) 30 sekunder</li>
+            <li>C) 1 minut</li>
+        </ul>
+        <button onclick="toggleAnswer('q5')">Visa svar & paragraf</button>
+        <div id="q5" class="answer-box">
+            <span class="ref-tag">Paragraf C.1.10.6</span><br>
+            <strong>Rätt svar: A (15 sekunder).</strong> Strafftiden för nedskräpning är distansberoende: 10 sek (sprint) och 15 sek (standard).
+        </div>
+    </div>
+
+    <!-- Fråga 6 -->
+    <div class="question">
+        <p>6. Vid SM i Sprint är drafting (rullåkning) normalt tillåten. Vilket styre är då obligatoriskt?</p>
+        <ul class="options">
+            <li>A) Tempo-styre med långa bågar</li>
+            <li>B) Traditionellt bockstyre</li>
+            <li>C) Valfritt styre så länge styrändarna är pluggade</li>
+        </ul>
+        <button onclick="toggleAnswer('q6')">Visa svar & paragraf</button>
+        <div id="q6" class="answer-box">
+            <span class="ref-tag">Paragraf C.3.4.1 (Drafting tillåten)</span><br>
+            <strong>Rätt svar: B (Traditionellt bockstyre).</strong> Vid draftinglopp är endast traditionella bockstyren tillåtna. Clip-on-bågar och armbågsstöd är förbjudna.
+        </div>
+    </div>
+
+    <!-- Fråga 7 -->
+    <div class="question">
+        <p>7. När anses en tävlande vara omkörd under cykelmomentet?</p>
+        <ul class="options">
+            <li>A) När den omkörande cyklistens bakhjul passerat framhjulet</li>
+            <li>B) När den omkörande cyklistens framhjul är framför den andres</li>
+            <li>C) När den omkörande cyklisten ropar "vänster"</li>
+        </ul>
+        <button onclick="toggleAnswer('q7')">Visa svar & paragraf</button>
+        <div id="q7" class="answer-box">
+            <span class="ref-tag">Paragraf C.3.7.5</span><br>
+            <strong>Rätt svar: B.</strong> En tävlande anses omkörd så fort den andres framhjul är framför det egna framhjulet.
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleAnswer(id) {
+        var x = document.getElementById(id);
+        if (x.style.display === "block") {
+            x.style.display = "none";
+        } else {
+            x.style.display = "block";
+        }
+    }
+</script>
+
+</body>
+</html>
+```
+
+### Förklaring av paragrafhänvisningar i quizet:
+*   **C.3.7.4**: Definierar omkörningstiden på 20 sekunder för korta/standarddistanser.
+*   **C.3.7.9**: Anger draftzoner för motorfordon (15m MC, 35m övriga).
+*   **C.3.7.10**: Fastställer strafftider för mount/dismount-linjeöverträdelser (10s sprint, 15s standard).
+*   **C.1.5.1**: Anger regeln om utrustningsplacering inom 0,5 meter från märkning i växlingsområdet.
+*   **C.1.10.6**: Reglerar straff vid nedskräpning och de specifika tiderna (10s/15s).
+*   **C.3.4.1**: Beskriver utrustningskrav vid draftinglopp, inklusive förbud mot clip-ons och krav på bockstyre.
+*   **C.3.7.5**: Definierar exakt när en omkörning anses vara fullbordad.
